@@ -1,0 +1,3 @@
+Readme
+Refresh data: do not keep calling function on space hold
+Lock/Unlock: functionality, switch icons

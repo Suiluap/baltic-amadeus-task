@@ -1,0 +1,19 @@
+@use "scss-reset/total";
+@use "colors";
+@use "utils";
+
+@import "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap";
+
+* {
+  font-family: "Inter", sans-serif;
+}
+
+html {
+  background-color: colors.$dark-gray;
+  color: colors.$white;
+  overflow-y: scroll;
+}
+
+main {
+  margin-bottom: 99px;
+}

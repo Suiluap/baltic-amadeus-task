@@ -1,10 +1,16 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import { GiphyFetch, type GifsResult } from "@giphy/js-fetch-api";
 import type { AppState } from "../store";
+import type { IGif } from "@giphy/js-types";
 
 interface GifState {
   loading: boolean;
   data: GifsResult | null;
+  savedData: { position: number; data: IGif }[];
   error: string | null;
   offset: number;
 }
@@ -12,6 +18,7 @@ interface GifState {
 const initialState: GifState = {
   loading: true,
   data: null,
+  savedData: [],
   error: null,
   offset: 0,
 };
@@ -28,6 +35,9 @@ export const fetchGifs = createAsyncThunk(
         new Date(b.import_datetime).getTime()
       );
     });
+    state.gif.savedData.forEach((item) => {
+      data.data[item.position] = item.data;
+    });
     return data;
   }
 );
@@ -35,7 +45,19 @@ export const fetchGifs = createAsyncThunk(
 const gifSlice = createSlice({
   name: "gif",
   initialState,
-  reducers: {},
+  reducers: {
+    save: (state, action: PayloadAction<{ position: number; data: IGif }>) => {
+      state.savedData.push({
+        position: action.payload.position,
+        data: action.payload.data,
+      });
+    },
+    remove: (state, action: PayloadAction<number>) => {
+      state.savedData = state.savedData.filter(
+        (item) => item.position != action.payload
+      );
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchGifs.pending, (state) => {
       state.loading = true;
@@ -53,3 +75,4 @@ const gifSlice = createSlice({
 });
 
 export default gifSlice.reducer;
+export const { save, remove } = gifSlice.actions;

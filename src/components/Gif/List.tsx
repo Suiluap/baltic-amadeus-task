@@ -14,19 +14,11 @@ const List = () => {
   return gif.loading ? (
     <div className="center">Loading...</div>
   ) : gif.error ? (
-    <div className="center">Error: {gif.error}</div>
+    <div className="center">{gif.error}</div>
   ) : (
     <div className={styles.list}>
-      {gif.data?.data.map((item) => (
-        <Item
-          key={item.id}
-          title={item.title}
-          date={new Date(item.import_datetime).toISOString().split("T")[0]}
-          image={{
-            alt: item.alt_text || "GIF Image",
-            url: item.images.fixed_width.url,
-          }}
-        />
+      {gif.data?.data.map((item, index) => (
+        <Item key={item.id} data={item} position={index} />
       ))}
     </div>
   );
